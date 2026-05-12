@@ -1,0 +1,14 @@
+subscription_name,category,free_tier,free_price,medium_tier,medium_price,costly_tier,costly_price
+Netflix,Streaming,,,Standard,10.99,Premium,17.99
+Spotify,Streaming,Free,0.0,Individual,10.99,Family,17.99
+Disney+,Streaming,,,Standard,7.99,Premium,13.99
+Ring,Security,Basic,0.0,Plus,10.0,Pro,20.0
+Nest Aware,Security,,,Standard,6.0,Premium,12.0
+Notion,Productivity,Free,0.0,Plus,10.0,Business,18.0
+Adobe CC,Productivity,,,Single App,29.99,All Apps,59.99
+Peloton,Fitness,,,Digital,12.99,All-Access,44.0
+MyFitnessPal,Fitness,Free,0.0,Premium,9.99,,
+Google Drive,Utility,Free,0.0,100GB,2.99,2TB,9.99
+Dropbox,Utility,Free,0.0,Plus,11.99,Professional,19.99
+Xbox Game Pass,Gaming,,,Core,7.99,Ultimate,14.99
+PlayStation+,Gaming,,,Essential,8.99,Premium,17.99

@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+.venv/
+
+# Generated data files — regenerate with generate_data.py
+data/bank_data.csv
+data/usage_data.csv
+data/features.csv
+data/suggestion_sheet.csv
+data/test_bank_data.csv
+data/test_usage_data.csv
+
+# User data — never commit personal data
+data/user_subscriptions.csv
+data/user_usage.csv
+data/pending_feedback.csv
+data/predictions_history.csv
+data/feedback_log.csv
+
+# Keep subscription_plan_details.csv — it's manually maintained
+!data/subscription_plan_details.csv
+
+# Trained model — regenerate with train_model.py
+model/
+
+# Docker
+.dockerignore
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/

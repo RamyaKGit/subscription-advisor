@@ -78,6 +78,128 @@ subscription_advisor/
 
 ---
 
+## File execution order and outputs
+
+### Step 1 — generate_data.py
+Generates synthetic training data for 50 users across 13 subscriptions over 12 months.
+
+**Outputs:**
+```
+data/bank_data.csv                    — 50 users x payments x 12 months
+data/usage_data.csv                   — 50 users x usage sessions x 12 months
+data/subscription_plan_details.csv    — 13 subscriptions with tier prices
+```
+
+---
+
+### Step 2 — generate_labels.py
+Reads bank and usage data, computes features per (user, subscription), applies category-aware rules to generate labels, adds 12% noise.
+
+**Reads:**
+```
+data/bank_data.csv
+data/usage_data.csv
+data/subscription_plan_details.csv
+```
+
+**Outputs:**
+```
+data/features.csv         — computed features + target label per (user, subscription)
+data/suggestion_sheet.csv — simplified view: user, subscription, target, reason
+```
+
+---
+
+### Step 3 — train_model.py
+Reads features.csv, trains a Random Forest classifier, evaluates accuracy.
+
+**Reads:**
+```
+data/features.csv
+```
+
+**Outputs:**
+```
+model/model.pkl           — trained Random Forest model
+model/cat_encoder.pkl     — category label encoder
+model/billing_encoder.pkl — billing cycle label encoder
+model/label_encoder.pkl   — target label encoder (CLOSE/REVIEW/OPEN)
+```
+
+---
+
+### Step 4 — generate_test_data.py
+Generates realistic test data for a single user (test_user) from Jan 2025 to May 2026 with mixed personas per subscription.
+
+**Outputs:**
+```
+data/test_bank_data.csv   — 17 months of bank entries for test_user
+data/test_usage_data.csv  — 17 months of usage sessions for test_user
+```
+
+---
+
+### Step 5 — streamlit run app.py
+Launches the web app. Reads from all generated files.
+
+**Reads at runtime:**
+```
+data/subscription_plan_details.csv
+data/test_bank_data.csv
+data/test_usage_data.csv
+model/model.pkl + encoders
+```
+
+**Writes at runtime:**
+```
+data/user_subscriptions.csv    — subscriptions entered by each user on Page 1
+data/user_usage.csv            — usage entries logged by each user on Page 2
+data/pending_feedback.csv      — agree/disagree feedback from Page 3
+data/predictions_history.csv   — auto-saved predictions on every Page 3 visit
+```
+
+---
+
+### Step 6 — retrain.py (weekly)
+Reads pending feedback older than 7 days, converts to labeled rows, appends to features.csv, retrains the model.
+
+**Reads:**
+```
+data/pending_feedback.csv
+data/features.csv
+```
+
+**Outputs:**
+```
+data/features.csv          — updated with new labeled rows from feedback
+data/feedback_log.csv      — archive of all processed feedback
+model/model.pkl            — updated retrained model
+model/cat_encoder.pkl      — updated encoders
+model/billing_encoder.pkl
+model/label_encoder.pkl
+```
+
+---
+
+### Execution order summary
+
+```
+generate_data.py          -> bank_data.csv, usage_data.csv, subscription_plan_details.csv
+        |
+generate_labels.py        -> features.csv, suggestion_sheet.csv
+        |
+train_model.py            -> model.pkl, encoders
+        |
+generate_test_data.py     -> test_bank_data.csv, test_usage_data.csv
+        |
+streamlit run app.py      -> user_subscriptions.csv, user_usage.csv,
+                             pending_feedback.csv, predictions_history.csv
+        | (weekly)
+retrain.py                -> updated features.csv, model.pkl, feedback_log.csv
+```
+
+---
+
 ## Running locally
 
 ### First time setup
